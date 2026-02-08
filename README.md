@@ -11,8 +11,8 @@ The Ambari MCP Server provides AI assistants with comprehensive access to Apache
 **Key Benefits:**
 - 🚀 **High Performance**: Built in Go with connection pooling and retry logic  
 - 🔒 **Enterprise Security**: LDAP authentication with role-based permissions [WIP]
-- 📊 **Comprehensive Coverage**: 40+ tools covering all major Ambari operations
-- 🔧 **Production Ready**: Robust error handling and graceful shutdown
+- 📊 **Comprehensive Coverage**: 52+ tools covering all major Ambari operations  including user/group management
+- 🔧 **Production Ready**: Robust error handling , TLS/mTLS support, and graceful shutdown
 
 ## Architecture
 
@@ -34,7 +34,7 @@ The server implements several design patterns for maintainability and extensibil
             │  ┌─────────────────┐ ┌─────────────────────┐│
             │  │   Read-Only     │ │    Actionable       ││
             │  │   Operations    │ │    Operations       ││
-            │  │   (19 tools)    │ │    (21 tools)       ││
+            │  │   (24 tools)    │ │    (28 tools)       ││
             │  │                 │ │                     ││
             │  │ • Get clusters  │ │ • Start services    ││
             │  │ • List services │ │ • Restart components││
@@ -89,7 +89,21 @@ The server implements several design patterns for maintainability and extensibil
 
 ## Features
 
-### 🛠️ **40 MCP Tools Available**
+### 🛠️ **52 MCP Tools Available**
+
+#### **User and Group Management**
+- `ambari_users_getusers` - Get all Ambari users
+- `ambari_users_getuser` - Get specific user details
+- `ambari_users_getgroups` - Get all Ambari groups
+- `ambari_users_getgroup` - Get specific group details
+- `ambari_users_getuserprivileges` - Get user privileges
+- `ambari_users_createuser` - Create new Ambari user
+- `ambari_users_updateuser` - Update existing user
+- `ambari_users_deleteuser` - Delete Ambari user
+- `ambari_users_creategroup` - Create new Ambari group
+- `ambari_users_deletegroup` - Delete Ambari group
+- `ambari_users_addusertogroup` - Add user to group
+- `ambari_users_removeuserfromgroup` - Remove user from group
 
 #### **Cluster Management**
 - `ambari_clusters_getclusters` - List all clusters
@@ -422,19 +436,43 @@ For MCP clients like Claude Desktop and Cline:
 ./server -transport stdio
 ```
 
-### HTTP (Planned)
-For web applications and direct API access:
+### HTTP
+For web applications and streamableHttp clients:
 ```bash  
-./server -transport http -host 0.0.0.0 -port 9001
+./server -transport http -host 127.0.0.1 -port 8094
 ```
 
-### HTTPS/mTLS (Planned)
-For secure enterprise deployments:
+### HTTPS/TLS
+For secure deployments with TLS encryption:
 ```bash
-./server -transport mtls \
-  -ssl-certfile certs/server-cert.pem \
-  -ssl-keyfile certs/server-key.pem \
-  -ssl-ca-certs certs/ca.pem
+# Set TLS certificate environment variables
+export TLS_CERT_FILE=/path/to/server.crt
+export TLS_KEY_FILE=/path/to/server.key
+
+./server -transport ssl -host 127.0.0.1 -port 8443
+```
+
+### HTTPS/mTLS
+For enterprise deployments with mutual TLS authentication:
+```bash
+# Set TLS certificate and CA environment variables
+export TLS_CERT_FILE=/path/to/server.crt
+export TLS_KEY_FILE=/path/to/server.key
+export TLS_CA_FILE=/path/to/ca.crt
+
+./server -transport mtls -host 127.0.0.1 -port 8443
+```
+
+### Actionable Tool Control
+Temporarily disable state-changing operations (useful for readonly access):
+```bash
+# Only readonly tools (24 tools - safe operations only)
+export ENABLE_ACTIONABLE_TOOLS=false
+./server -transport http -port 8094
+
+# All tools enabled (52 tools - includes user management, service control, etc.)
+export ENABLE_ACTIONABLE_TOOLS=true  # or omit entirely
+./server -transport http -port 8094
 ```
 
 ## Error Handling & Reliability

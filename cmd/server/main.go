@@ -55,7 +55,7 @@ func main() {
 	// --- Operation Registry (Registry/Factory pattern) ---
 	registry := ops.NewRegistry(logger)
 
-	// Register READ-ONLY operations (safe, GET-only, lower permissions) — 19 tools
+	// Register READ-ONLY operations (safe, GET-only, lower permissions) — 24 tools
 	readOnlyOps := []ops.Operation{
 		// Clusters
 		readonly.NewGetClusters(ambariClient, logger),
@@ -80,6 +80,12 @@ func main() {
 		readonly.NewGetAlertGroups(ambariClient, logger),
 		readonly.NewGetAlertTargets(ambariClient, logger),
 		readonly.NewGetNotifications(ambariClient, logger),
+		// Users and Groups
+		readonly.NewGetUsers(ambariClient, logger),
+		readonly.NewGetUser(ambariClient, logger),
+		readonly.NewGetGroups(ambariClient, logger),
+		readonly.NewGetGroup(ambariClient, logger),
+		readonly.NewGetUserPrivileges(ambariClient, logger),
 	}
 	for _, op := range readOnlyOps {
 		if err := registry.Register(op); err != nil {
@@ -87,7 +93,7 @@ func main() {
 		}
 	}
 
-	// Register ACTIONABLE operations (state-changing, higher permissions) — 21 tools
+	// Register ACTIONABLE operations (state-changing, higher permissions) — 27 tools
 	// Can be disabled via ENABLE_ACTIONABLE_TOOLS=false environment variable
 	enableActionable := strings.ToLower(envOr("ENABLE_ACTIONABLE_TOOLS", "true")) == "true"
 
@@ -120,6 +126,14 @@ func main() {
 			actionable.NewRemoveNotificationFromGroup(ambariClient, logger),
 			// Alert settings
 			actionable.NewSaveAlertSettings(ambariClient, logger),
+			// User and Group management
+			actionable.NewCreateUser(ambariClient, logger),
+			actionable.NewUpdateUser(ambariClient, logger),
+			actionable.NewDeleteUser(ambariClient, logger),
+			actionable.NewCreateUserGroup(ambariClient, logger),
+			actionable.NewDeleteUserGroup(ambariClient, logger),
+			actionable.NewAddUserToGroup(ambariClient, logger),
+			actionable.NewRemoveUserFromGroup(ambariClient, logger),
 		}
 		for _, op := range actionableOps {
 			if err := registry.Register(op); err != nil {

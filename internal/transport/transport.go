@@ -99,35 +99,21 @@ func (t *HTTPTransport) Start(ctx context.Context, mcpServer *MCPServer) error {
 		"mode": "http",
 		"addr": addr,
 	}).Info("Starting HTTP transport for MCP")
-
-	// Create HTTP server for MCP-over-HTTP (streamableHttp)
-	mux := http.NewServeMux()
-
-	// Handle MCP endpoint for streamableHttp clients
-	mux.HandleFunc("/mcp", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-
-		if r.Method == "OPTIONS" {
-			w.WriteHeader(http.StatusOK)
-			return
-		}
-
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(`{"status": "MCP HTTP transport active", "server": "mcp-ambari"}`))
-	})
-
+	
+	// Create streamable HTTP handler for MCP-over-HTTP (using MCP Go SDK)
+	handler := mcp.NewStreamableHTTPHandler(func(req *http.Request) *mcp.Server {
+		return mcpServer.Server
+	}, nil)
+	
 	// Apply auth middleware if provided
-	var handler http.Handler = mux
+	var httpHandler http.Handler = handler
 	if t.authMW != nil {
-		handler = t.authMW.Handler(mux)
+		httpHandler = t.authMW.Handler(handler)
 	}
 
 	server := &http.Server{
 		Addr:    addr,
-		Handler: handler,
+		Handler: httpHandler,
 	}
 
 	// Graceful shutdown
