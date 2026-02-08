@@ -10,8 +10,7 @@ The Ambari MCP Server provides AI assistants with comprehensive access to Apache
 
 **Key Benefits:**
 - 🚀 **High Performance**: Built in Go with connection pooling and retry logic  
-- 🔒 **Enterprise Security**: LDAP authentication with role-based permissions
-- 🏗️ **Clean Architecture**: SOLID principles with extensible design patterns
+- 🔒 **Enterprise Security**: LDAP authentication with role-based permissions [WIP]
 - 📊 **Comprehensive Coverage**: 40+ tools covering all major Ambari operations
 - 🔧 **Production Ready**: Robust error handling and graceful shutdown
 
