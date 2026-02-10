@@ -377,7 +377,7 @@ Direct access to cluster data via URI patterns:
 
 ```bash
 # Clone the repository
-git clone https://github.com/nikita15p/mcp-ambari.git
+git clone https://mcp-ambari.git
 cd mcp-ambari
 
 # Install dependencies

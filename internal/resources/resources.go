@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/niita15p/mcp-ambari/internal/client"
+	"mcp-ambari/internal/client"
 	"github.com/sirupsen/logrus"
 )
 

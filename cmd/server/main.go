@@ -22,13 +22,14 @@ import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 	"github.com/sirupsen/logrus"
 
-	"github.com/nikita15p/mcp-ambari/internal/auth"
-	"github.com/nikita15p/mcp-ambari/internal/client"
-	ops "github.com/nikita15p/mcp-ambari/internal/operations"
-	"github.com/nikita15p/mcp-ambari/internal/operations/actionable"
-	"github.com/nikita15p/mcp-ambari/internal/operations/readonly"
-	"github.com/nikita15p/mcp-ambari/internal/resources"
-	"github.com/nikita15p/mcp-ambari/internal/transport"
+	"mcp-ambari/internal/auth"
+	"mcp-ambari/internal/client"
+	ops "mcp-ambari/internal/operations"
+	"mcp-ambari/internal/operations/actionable"
+	"mcp-ambari/internal/operations/readonly"
+	"mcp-ambari/internal/resources"
+	"mcp-ambari/internal/transport"
+	"mcp-ambari/internal/prompts"
 )
 
 func main() {

@@ -1,4 +1,4 @@
-module github.com/niita15p/mcp-ambari
+module mcp-ambari
 
 go 1.23.0
 

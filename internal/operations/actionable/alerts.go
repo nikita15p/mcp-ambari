@@ -5,9 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/niita15p/mcp-ambari/internal/auth"
-	"github.com/niita15p/mcp-ambari/internal/client"
-	ops "github.com/niita15p/mcp-ambari/internal/operations"
+	"mcp-ambari/internal/auth"
+	"mcp-ambari/internal/client"
+	ops "mcp-ambari/internal/operations"
 	"github.com/sirupsen/logrus"
 )
 
@@ -252,8 +252,4 @@ func (o *DisableMaintenanceMode) Execute(ctx context.Context, a map[string]inter
 func m(t, desc string) map[string]interface{} { return map[string]interface{}{"type": t, "description": desc} }
 func req(a map[string]interface{}, keys ...string) error {
 	for _, k := range keys { if _, ok := a[k].(string); !ok { if _, ok2 := a[k]; !ok2 { return fmt.Errorf("%s is required", k) } } }; return nil
-}
-		}
-	}
-	return nil
 }

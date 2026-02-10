@@ -14,8 +14,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/niita15p/mcp-ambari/internal/auth"
-	"github.com/niita15p/mcp-ambari/internal/client"
+	"mcp-ambari/internal/auth"
+	"mcp-ambari/internal/client"
 	"github.com/sirupsen/logrus"
 )
 

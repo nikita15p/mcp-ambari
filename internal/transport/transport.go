@@ -13,7 +13,7 @@ import (
 	"net/http"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
-	"github.com/niita15p/mcp-ambari/internal/auth"
+	"mcp-ambari/internal/auth"
 	"github.com/sirupsen/logrus"
 )
 

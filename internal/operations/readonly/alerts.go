@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/niita15p/mcp-ambari/internal/auth"
-	"github.com/niita15p/mcp-ambari/internal/client"
-	ops "github.com/niita15p/mcp-ambari/internal/operations"
+	"mcp-ambari/internal/auth"
+	"mcp-ambari/internal/client"
+	ops "mcp-ambari/internal/operations"
 	"github.com/sirupsen/logrus"
 )
 

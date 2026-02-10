@@ -244,7 +244,7 @@ The `internal/certs/manager.go` package provides programmatic access to certific
 ```go
 import (
     "github.com/sirupsen/logrus"
-    "github.com/nikita15p/ambari-mcp-server/internal/certs"
+    "ambari-mcp-server/internal/certs"
 )
 
 // Create certificate manager
