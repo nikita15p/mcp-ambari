@@ -94,9 +94,9 @@ func main() {
 	}
 
 	// Register ACTIONABLE operations (state-changing, higher permissions) — 27 tools
-	// Can be disabled via ENABLE_ACTIONABLE_TOOLS=false environment variable
-	enableActionable := strings.ToLower(envOr("ENABLE_ACTIONABLE_TOOLS", "true")) == "true"
-
+	// Disabled by default for security - enable with ENABLE_ACTIONABLE_TOOLS=true
+	enableActionable := strings.ToLower(envOr("ENABLE_ACTIONABLE_TOOLS", "false")) == "true"
+	
 	if enableActionable {
 		actionableOps := []ops.Operation{
 			// Cluster management
@@ -170,8 +170,14 @@ func main() {
 		registerMCPResource(mcpServer, resDef, resRegistry, logger)
 	}
 
+	// --- MCP Prompts (reusable templates for common workflows) ---
+	promptRegistry := prompts.NewRegistry(logger)
+	for _, promptDef := range promptRegistry.Definitions() {
+		registerMCPPrompt(mcpServer, promptDef, promptRegistry, logger)
+	}
+
 	logger.WithFields(logrus.Fields{
-		"tools": total, "resources": resRegistry.Count(),
+		"tools": total, "resources": resRegistry.Count(), "prompts": promptRegistry.Count(),
 	}).Info("MCP server fully initialized")
 
 	// --- Parse CLI flags ---
@@ -322,6 +328,55 @@ func registerMCPResource(server *mcp.Server, resDef resources.ResourceDefinition
 		"uri":  resDef.URI,
 		"name": resDef.Name,
 	}).Debug("MCP resource registered")
+}
+
+// registerMCPPrompt bridges our prompt registry to the SDK's mcp.Server
+func registerMCPPrompt(server *mcp.Server, promptDef prompts.PromptDefinition, promptReg *prompts.Registry, logger *logrus.Logger) {
+	// Convert to MCP SDK prompt
+	prompt := promptDef.ToMCPPrompt()
+
+	// Create prompt handler
+	handler := mcp.PromptHandler(func(ctx context.Context, req *mcp.GetPromptRequest) (*mcp.GetPromptResult, error) {
+		// Convert request arguments to map[string]string
+		args := make(map[string]string)
+		if req.Params.Arguments != nil {
+			// Arguments are already map[string]string
+			args = req.Params.Arguments
+		}
+
+		// Get rendered prompt from registry
+		renderedPrompt, err := promptReg.GetPrompt(req.Params.Name, args)
+		if err != nil {
+			logger.WithFields(logrus.Fields{
+				"prompt": req.Params.Name,
+				"error":  err,
+			}).Error("Failed to render prompt")
+			return nil, err
+		}
+
+		// Return the prompt result
+		textContent := &mcp.TextContent{
+			Text: renderedPrompt,
+		}
+		
+		return &mcp.GetPromptResult{
+			Description: promptDef.Description,
+			Messages: []*mcp.PromptMessage{
+				{
+					Role:    "user",
+					Content: textContent,
+				},
+			},
+		}, nil
+	})
+
+	// Register the prompt with the SDK
+	server.AddPrompt(prompt, handler)
+
+	logger.WithFields(logrus.Fields{
+		"name":        promptDef.Name,
+		"description": promptDef.Description,
+	}).Debug("MCP prompt registered")
 }
 
 // --- Helpers ---

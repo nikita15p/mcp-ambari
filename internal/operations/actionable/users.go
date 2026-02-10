@@ -1,4 +1,3 @@
-/* START GENAI */
 // Package actionable provides actionable operations for user and group management
 package actionable
 
@@ -324,5 +323,3 @@ func (o *RemoveUserFromGroup) Execute(ctx context.Context, a map[string]interfac
 
 	return o.Client.Delete(ctx, fmt.Sprintf("/groups/%s/members/%s", groupName, username), nil)
 }
-
-/* END GENAI */

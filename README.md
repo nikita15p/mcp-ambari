@@ -2,11 +2,16 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
-A high-performance Model Context Protocol (MCP) server for Apache Ambari implemented in Go. This project enables AI assistants to seamlessly interact with Ambari clusters through standardized MCP tools and resources.
+A high-performance Model Context Protocol (MCP) server for Apache Ambari implemented in Go. This project enables AI agents and assistants to seamlessly interact with Ambari clusters through standardized MCP tools and resources.
 
 ## Overview
 
-The Ambari MCP Server provides AI assistants with comprehensive access to Apache Ambari clusters, enabling automated cluster management, service operations, monitoring, and troubleshooting through the Model Context Protocol.
+The Ambari MCP Server acts as a bridge between AI agents and Apache Ambari clusters, providing comprehensive access for automated cluster management, service operations, monitoring, and troubleshooting through the Model Context Protocol. **The server is designed to be consumed by AI agents** rather than human users directly.
+
+**Agent-Centric Architecture:**
+```
+AI Agents → Ambari MCP Server → Apache Ambari REST API → Hadoop Cluster
+```
 
 **Key Benefits:**
 - 🚀 **High Performance**: Built in Go with connection pooling and retry logic  
@@ -20,11 +25,11 @@ The server implements several design patterns for maintainability and extensibil
 
 ```
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   MCP Clients   │    │  Transport Layer │    │  Auth Provider  │
+│   AI Agents     │    │  Transport Layer │    │  Auth Provider  │
 │                 │    │                  │    │                 │  
-│ • Claude Desktop│◄──►│ • Stdio (MCP)    │◄──►│ • LDAP Headers  │
+│ • Claude         │◄──►│ • Stdio (MCP)    │◄──►│ • LDAP Headers  │
 │ • Cline         │    │ • HTTP/HTTPS     │    │ • Permission    │
-│ • Custom Apps   │    │ • mTLS           │    │   Groups        │
+│ • Custom Agents │    │ • mTLS           │    │   Groups        │
 └─────────────────┘    └──────────────────┘    └─────────────────┘
                                 │
                                 ▼
@@ -331,6 +336,19 @@ Prompts are reusable templates that guide AI agents through multi-step workflows
 
 ---
 
+### 📝 **8 MCP Prompts Available**
+
+Reusable prompt templates for common Ambari workflows:
+
+- `cluster_health_check` - Comprehensive cluster health analysis
+- `service_troubleshooting` - Diagnose and fix service issues
+- `alert_investigation` - Investigate and analyze cluster alerts
+- `performance_analysis` - Analyze service and cluster performance
+- `configuration_review` - Review and validate cluster configurations
+- `user_permissions_audit` - Audit users, groups, and permissions
+- `upgrade_readiness_check` - Verify cluster is ready for maintenance
+- `service_dependency_analysis` - Understand service dependencies
+
 ### 📊 **12 MCP Resources Available**
 
 Direct access to cluster data via URI patterns:
@@ -518,6 +536,7 @@ mcp-ambari/
 │   │   └── readonly/          # Safe, read-only operations
 │   │       ├── alerts.go      # Alert querying operations
 │   │       └── clusters.go    # Cluster & service queries
+│   │   │   └── users.go       # User and group queries
 │   ├── resources/             # MCP resources (data endpoints)
 │   │   └── resources.go       # 12 cluster data resources
 │   └── transport/             # Transport layer abstraction
@@ -632,14 +651,13 @@ export TLS_CA_FILE=/path/to/ca.crt
 ```
 
 ### Actionable Tool Control
-Temporarily disable state-changing operations (useful for readonly access):
+**Actionable tools are disabled by default for security.** Only read-only operations are available unless explicitly enabled:
 ```bash
-# Only readonly tools (24 tools - safe operations only)
-export ENABLE_ACTIONABLE_TOOLS=false
+# Default: Only readonly tools (24 tools - safe operations only)
 ./server -transport http -port 8094
 
-# All tools enabled (52 tools - includes user management, service control, etc.)
-export ENABLE_ACTIONABLE_TOOLS=true  # or omit entirely
+# Explicitly enable all tools (51 tools - includes user management, service control, etc.)
+export ENABLE_ACTIONABLE_TOOLS=true
 ./server -transport http -port 8094
 ```
 

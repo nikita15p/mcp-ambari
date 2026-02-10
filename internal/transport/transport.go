@@ -213,12 +213,12 @@ func (t *MTLSTransport) Start(ctx context.Context, mcpServer *MCPServer) error {
 	// Load CA certificate for client verification
 	caCert, err := ioutil.ReadFile(t.cfg.SSLCACerts)
 	if err != nil {
-		return fmt.Errorf("failed to read CA certificate: %v", err)
+		return fmt.Errorf("failed to read CA certificate from %s: %v", t.cfg.SSLCACerts, err)
 	}
 
 	caCertPool := x509.NewCertPool()
 	if !caCertPool.AppendCertsFromPEM(caCert) {
-		return fmt.Errorf("failed to parse CA certificate")
+		return fmt.Errorf("failed to parse CA certificate from %s", t.cfg.SSLCACerts)
 	}
 
 	tlsConfig := &tls.Config{
