@@ -89,79 +89,247 @@ The server implements several design patterns for maintainability and extensibil
 
 ## Features
 
-### 🛠️ **52 MCP Tools Available**
+### 🛠️ **51 MCP Tools Available**
 
-#### **User and Group Management**
-- `ambari_users_getusers` - Get all Ambari users
-- `ambari_users_getuser` - Get specific user details
-- `ambari_users_getgroups` - Get all Ambari groups
-- `ambari_users_getgroup` - Get specific group details
-- `ambari_users_getuserprivileges` - Get user privileges
-- `ambari_users_createuser` - Create new Ambari user
-- `ambari_users_updateuser` - Update existing user
-- `ambari_users_deleteuser` - Delete Ambari user
-- `ambari_users_creategroup` - Create new Ambari group
-- `ambari_users_deletegroup` - Delete Ambari group
-- `ambari_users_addusertogroup` - Add user to group
-- `ambari_users_removeuserfromgroup` - Remove user from group
 
-#### **Cluster Management**
-- `ambari_clusters_getclusters` - List all clusters
-- `ambari_clusters_getcluster` - Get cluster details
-- `ambari_clusters_createcluster` - Create new cluster
+- **51 Tools**: Operations for managing and monitoring Ambari clusters
+- **12 Resources**: URI-based access to cluster data
+- **8 Prompts**: Guided workflows for common tasks
 
-#### **Service Lifecycle**
-- `ambari_services_getservices` - List cluster services
-- `ambari_services_getservice` - Get service details
-- `ambari_services_getservicestate` - Get detailed service state
-- `ambari_services_startservice` - Start service
-- `ambari_services_stopservice` - Stop service
-- `ambari_services_restartservice` - Restart service
+---
 
-#### **Configuration Management**
-- `ambari_services_getserviceswithstaleconfigs` - Find services needing restart
-- `ambari_services_gethostcomponentswithstaleconfigs` - Find components needing restart
-- `ambari_services_restartcomponents` - Restart specific components
+## 🛠️ Tools (51 Total)
 
-#### **Maintenance Operations**
-- `ambari_services_enablemaintenancemode` - Enable maintenance mode
-- `ambari_services_disablemaintenancemode` - Disable maintenance mode
-- `ambari_services_getrollingrestartstatus` - Monitor rolling restarts
+### Read-Only Tools (24) - Always Available
 
-#### **Service Health Checks**
-- `ambari_services_runservicecheck` - Run service health checks
-- `ambari_services_isservicechecksupported` - Check if service supports health checks
-- `ambari_services_getservicecheckstatus` - Get service check status
+These tools are safe, GET-only operations with lower permission requirements:
 
-#### **Host Management**
-- `ambari_hosts_gethosts` - List all hosts
-- `ambari_hosts_gethost` - Get host details
+#### Cluster Operations (2)
+| Tool Name | Description |
+|-----------|-------------|
+| `ambari_clusters_getclusters` | List all Ambari clusters |
+| `ambari_clusters_getcluster` | Get detailed information about a specific cluster |
 
-#### **Alert System**
-- `ambari_alerts_getalerts` - Get cluster alerts
-- `ambari_alerts_getalertsummary` - Get alert summary
-- `ambari_alerts_getalertdetails` - Get alert details
-- `ambari_alerts_getalertdefinitions` - List alert definitions
-- `ambari_alerts_updatealertdefinition` - Update alert definitions
+#### Service Operations (8)
+| Tool Name | Description |
+|-----------|-------------|
+| `ambari_services_getservices` | List all services in a cluster |
+| `ambari_services_getservice` | Get detailed service information |
+| `ambari_services_getservicestate` | Get comprehensive service state details |
+| `ambari_services_getserviceswithstaleconfigs` | Find services needing restart |
+| `ambari_services_gethostcomponentswithstaleconfigs` | Find components needing restart |
+| `ambari_services_getrollingrestartstatus` | Monitor rolling restart operations |
+| `ambari_services_isservicechecksupported` | Check if service supports health checks |
+| `ambari_services_getservicecheckstatus` | Get status of service health checks |
 
-#### **Alert Groups**
-- `ambari_alerts_getalertgroups` - List alert groups
-- `ambari_alerts_createalertgroup` - Create alert group
-- `ambari_alerts_updatealertgroup` - Update alert group
-- `ambari_alerts_deletealertgroup` - Delete alert group
-- `ambari_alerts_duplicatealertgroup` - Duplicate alert group
-- `ambari_alerts_adddefinitiontogroup` - Add alert to group
-- `ambari_alerts_removedefinitionfromgroup` - Remove alert from group
+#### Host Operations (2)
+| Tool Name | Description |
+|-----------|-------------|
+| `ambari_hosts_gethosts` | List all hosts in the cluster |
+| `ambari_hosts_gethost` | Get detailed information about a specific host |
 
-#### **Alert Notifications**
-- `ambari_alerts_getnotifications` - List notification targets
-- `ambari_alerts_gettargets` - List alert targets
-- `ambari_alerts_createnotification` - Create notification target
-- `ambari_alerts_updatenotification` - Update notification target
-- `ambari_alerts_deletenotification` - Delete notification target
-- `ambari_alerts_addnotificationtogroup` - Add notification to group
-- `ambari_alerts_removenotificationfromgroup` - Remove notification from group
-- `ambari_alerts_savealertsettings` - Save alert settings
+#### Alert Operations (7)
+| Tool Name | Description |
+|-----------|-------------|
+| `ambari_alerts_getalerts` | Get all cluster alerts |
+| `ambari_alerts_getalertsummary` | Get summarized alert information |
+| `ambari_alerts_getalertdetails` | Get detailed alert information |
+| `ambari_alerts_getalertdefinitions` | List all alert definitions |
+| `ambari_alerts_getalertgroups` | List all alert groups |
+| `ambari_alerts_gettargets` | List all alert targets |
+| `ambari_alerts_getnotifications` | List all alert notification targets |
+
+#### User & Group Operations (5)
+| Tool Name | Description |
+|-----------|-------------|
+| `ambari_users_getusers` | Get all Ambari users |
+| `ambari_users_getuser` | Get specific user details |
+| `ambari_users_getgroups` | Get all Ambari groups |
+| `ambari_users_getgroup` | Get specific group details |
+| `ambari_users_getuserprivileges` | Get privileges assigned to a user |
+
+### Actionable Tools (27) - Require ENABLE_ACTIONABLE_TOOLS=true
+
+These tools perform state-changing operations and require explicit enablement:
+
+#### Cluster Management (1)
+| Tool Name | Description |
+|-----------|-------------|
+| `ambari_clusters_createcluster` | Create a new Ambari cluster |
+
+#### Service Lifecycle (7)
+| Tool Name | Description |
+|-----------|-------------|
+| `ambari_services_startservice` | Start a service |
+| `ambari_services_stopservice` | Stop a service |
+| `ambari_services_restartservice` | Restart a service |
+| `ambari_services_restartcomponents` | Restart specific components |
+| `ambari_services_enablemaintenancemode` | Enable maintenance mode for a service |
+| `ambari_services_disablemaintenancemode` | Disable maintenance mode for a service |
+| `ambari_services_runservicecheck` | Run health checks for a service |
+
+#### Alert Definition Management (1)
+| Tool Name | Description |
+|-----------|-------------|
+| `ambari_alerts_updatealertdefinition` | Update an alert definition |
+
+#### Alert Group Management (5)
+| Tool Name | Description |
+|-----------|-------------|
+| `ambari_alerts_createalertgroup` | Create a new alert group |
+| `ambari_alerts_updatealertgroup` | Update an existing alert group |
+| `ambari_alerts_deletealertgroup` | Delete an alert group |
+| `ambari_alerts_duplicatealertgroup` | Duplicate an alert group |
+| `ambari_alerts_adddefinitiontogroup` | Add an alert definition to a group |
+| `ambari_alerts_removedefinitionfromgroup` | Remove an alert definition from a group |
+
+#### Alert Notification Management (5)
+| Tool Name | Description |
+|-----------|-------------|
+| `ambari_alerts_createnotification` | Create a new notification target |
+| `ambari_alerts_updatenotification` | Update a notification target |
+| `ambari_alerts_deletenotification` | Delete a notification target |
+| `ambari_alerts_addnotificationtogroup` | Add notification to alert group |
+| `ambari_alerts_removenotificationfromgroup` | Remove notification from alert group |
+| `ambari_alerts_savealertsettings` | Save alert settings |
+
+#### User & Group Management (8)
+| Tool Name | Description |
+|-----------|-------------|
+| `ambari_users_createuser` | Create a new Ambari user |
+| `ambari_users_updateuser` | Update an existing user |
+| `ambari_users_deleteuser` | Delete an Ambari user |
+| `ambari_users_creategroup` | Create a new Ambari group |
+| `ambari_users_deletegroup` | Delete an Ambari group |
+| `ambari_users_addusertogroup` | Add a user to a group |
+| `ambari_users_removeuserfromgroup` | Remove a user from a group |
+
+---
+
+## 📊 Resources (12 Total)
+
+Resources provide read-only access to cluster data via URI patterns:
+
+| Resource URI | Description |
+|--------------|-------------|
+| `ambari://clusters` | List of all Ambari clusters with basic information |
+| `ambari://cluster/{clusterName}` | Detailed information about a specific cluster |
+| `ambari://cluster/{clusterName}/services` | All services running in a cluster with their status |
+| `ambari://cluster/{clusterName}/hosts` | All hosts in a cluster with status and components |
+| `ambari://cluster/{clusterName}/alerts` | Current alerts for a cluster grouped by severity |
+| `ambari://cluster/{clusterName}/alerts/summary` | Summarized alert information for quick health overview |
+| `ambari://cluster/{clusterName}/services/stale-configs` | Services needing restart due to configuration changes |
+| `ambari://cluster/{clusterName}/service/{serviceName}` | Detailed information about a specific service |
+| `ambari://cluster/{clusterName}/service/{serviceName}/components` | All components of a service with host assignments |
+| `ambari://host/{hostName}` | Detailed information about a specific host |
+| `ambari://cluster/{clusterName}/requests/recent` | Recent operations and their status |
+| `ambari://cluster/{clusterName}/configurations` | Current configuration types for all services |
+
+### Example Resource Access
+
+```bash
+# Get cluster details
+URI: ambari://cluster/sagarautomation
+
+# Get service components
+URI: ambari://cluster/sagarautomation/service/HDFS/components
+
+# Get alert summary
+URI: ambari://cluster/sagarautomation/alerts/summary
+```
+
+---
+
+## 📝 Prompts (8 Total)
+
+Prompts are reusable templates that guide AI agents through multi-step workflows:
+
+### 1. cluster_health_check
+**Description**: Comprehensive health check for an Ambari cluster including services, hosts, and alerts
+
+**Required Arguments**:
+- `clusterName` - Name of the Ambari cluster to check
+
+**Workflow**: Checks cluster overview, service status, alerts, host health, and stale configurations, then provides overall health assessment and recommendations.
+
+---
+
+### 2. service_troubleshooting
+**Description**: Troubleshoot issues with a specific Ambari service
+
+**Required Arguments**:
+- `clusterName` - Name of the Ambari cluster
+- `serviceName` - Name of the service to troubleshoot (e.g., HDFS, YARN)
+
+**Workflow**: Analyzes service state, alerts, components, and configurations to identify issues and provide troubleshooting recommendations.
+
+---
+
+### 3. alert_investigation
+**Description**: Investigate and analyze alerts in an Ambari cluster
+
+**Required Arguments**:
+- `clusterName` - Name of the Ambari cluster
+
+**Optional Arguments**:
+- `severity` - Alert severity to investigate (CRITICAL, WARNING, OK)
+
+**Workflow**: Reviews alert summary, details, affected services/hosts, and provides root cause analysis with remediation actions.
+
+---
+
+### 4. performance_analysis
+**Description**: Analyze performance and resource usage of cluster services
+
+**Required Arguments**:
+- `clusterName` - Name of the Ambari cluster
+
+**Optional Arguments**:
+- `serviceName` - Specific service to analyze
+
+**Workflow**: Evaluates service status, host resource usage, bottlenecks, and provides performance optimization recommendations.
+
+---
+
+### 5. configuration_review
+**Description**: Review cluster configurations and identify potential issues
+
+**Required Arguments**:
+- `clusterName` - Name of the Ambari cluster
+
+**Workflow**: Identifies stale configurations, components needing restart, and recommends restart strategies with impact assessment.
+
+---
+
+### 6. user_permissions_audit
+**Description**: Audit Ambari users, groups, and permissions
+
+**Required Arguments**: None
+
+**Workflow**: Reviews all users, groups, privileges, and provides security audit report with access control recommendations.
+
+---
+
+### 7. upgrade_readiness_check
+**Description**: Check if cluster is ready for upgrade or maintenance
+
+**Required Arguments**:
+- `clusterName` - Name of the Ambari cluster
+
+**Workflow**: Verifies all services are running, no critical alerts, no stale configs, all hosts healthy, then provides readiness assessment and upgrade blockers.
+
+---
+
+### 8. service_dependency_analysis
+**Description**: Analyze service dependencies and start/stop order
+
+**Required Arguments**:
+- `clusterName` - Name of the Ambari cluster
+- `serviceName` - Service to analyze dependencies for
+
+**Workflow**: Identifies service dependencies, recommended start/stop order, impact analysis, and safe restart procedures.
+
+---
 
 ### 📊 **12 MCP Resources Available**
 
